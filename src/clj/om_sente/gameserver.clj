@@ -10,5 +10,5 @@
   [host port nick channel]
   (printf "Connecting to %s on port %d...\n" host port)
   (def irc (i/connect host port nick :callbacks {:privmsg callback}))
-  (i/join irc "#iantest"))
+  (i/join irc channel))
 
