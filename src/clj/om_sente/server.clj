@@ -8,6 +8,7 @@
   (:require [clojure.core.async :as async
              :refer [<! <!! chan go thread]]
             [clojure.core.cache :as cache]
+            [clojure.string :as str]
             [compojure.core :refer [defroutes GET POST routes]]
             [compojure.handler :as h]
             [compojure.route :as r]
@@ -110,10 +111,11 @@
 ;; For a successful authentication, remember the login.
 
 (defmethod handle-event :session/auth
-  [[_ [username password]] req]
+  [[_ [host port]] req]
   (when-let [uid (session-uid req)]
-    (let [valid (and (= "admin" username)
-                     (= "secret" password))]
+    (let [valid (and (not (str/blank? host))
+                     ;; TODO: Handle this better
+                     (not (= 0 (Integer/parseInt port))))]
       (when valid
         (add-token uid (unique-id)))
       (chsk-send! uid [(if valid :auth/success :auth/fail)]))))

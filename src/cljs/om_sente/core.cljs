@@ -164,10 +164,10 @@
 (defn attempt-login
   "Handle the login event - send credentials to the server."
   [e app owner]
-  (let [username (-> (om/get-node owner "username") .-value)
-        password (-> (om/get-node owner "password") .-value)]
+  (let [host (-> (om/get-node owner "host") .-value)
+        port (-> (om/get-node owner "port") .-value)]
     (om/update! app [:notify/error] nil)
-    (chsk-send! [:session/auth [username password]]))
+    (chsk-send! [:session/auth [host port]]))
   ;; suppress the form submit:
   false)
 
@@ -177,25 +177,25 @@
   (reify
     om/IInitState
     (init-state [this]
-                {:username "" :password ""})
+                {:host "localhost" :port "6667"})
     om/IRenderState
     (render-state [this state]
                   (html [:div {:style {:margin "auto" :width "175"
                                        :border "solid blue 1px" :padding 20}}
                          (when-let [error (:notify/error app)]
                            [:div {:style #js {:color "red"}} error])
-                         [:h1 "Login"]
+                         [:h1 "Connect"]
                          [:form {:on-submit #(attempt-login % app owner)}
                           [:div
-                           [:p "Username"]
-                           [:input {:ref "username" :type "text" :value (:username state)
-                                    :on-change #(field-change % owner :username)}]]
+                           [:p "Host"]
+                           [:input {:ref "host" :type "text" :value (:host state)
+                                    :on-change #(field-change % owner :host)}]]
                           [:div
-                           [:p "Password"]
-                           [:input {:ref "password" :type "password" :value (:password state)
-                                    :on-change #(field-change % owner :password)}]]
+                           [:p "Port"]
+                           [:input {:ref "port" :type "number" :value (:port state)
+                                    :on-change #(field-change % owner :port)}]]
                           [:div
-                           [:input {:type "submit" :value "Login"}]]]]))))
+                           [:input {:type "submit" :value "Connect"}]]]]))))
 
 (defn line-graph
   "Example from http://www.janwillemtulp.com/2011/04/01/tutorial-line-chart-in-d3/"
