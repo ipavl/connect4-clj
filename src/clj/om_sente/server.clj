@@ -145,6 +145,7 @@
   [[_ msg] req]
   (when-let [uid (session-uid req)]
     (keep-alive uid)
+    (gs/message (get-irc-connection uid) "#iantest" msg)
     (chsk-send! uid [:test/reply msg])
     (Thread/sleep 3000)
     (chsk-send! uid [:test/reply (clojure.string/reverse msg)])))

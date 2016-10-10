@@ -16,3 +16,8 @@
   [irc channel]
   (i/join irc channel))
 
+(defn message
+  "Send a message to a target on IRC."
+  [irc target message]
+  (i/message irc target message))
+
