@@ -120,7 +120,7 @@
                        (not (= 0 port-int)))]
         (when valid
           (add-token uid (unique-id))
-          (gs/connect host port-int "iantest" "#iantest"))
+          (gs/connect host port-int (str "c4-clj-" uid) "#iantest"))
         (chsk-send! uid [(if valid :auth/success :auth/fail)])))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
