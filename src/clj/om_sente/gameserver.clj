@@ -7,8 +7,12 @@
 
 (defn connect
   "Connects to the given IRC server."
-  [host port nick channel]
+  [host port nick]
   (printf "Connecting to %s on port %d...\n" host port)
-  (def irc (i/connect host port nick :callbacks {:privmsg callback}))
+  (i/connect host port nick :callbacks {:privmsg callback}))
+
+(defn join
+  "Joins the specified IRC channel."
+  [irc channel]
   (i/join irc channel))
 
