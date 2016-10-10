@@ -12,13 +12,14 @@
                  [http-kit "2.1.19"]
                  [compojure "1.2.0"]
                  [ring/ring-core "1.3.1"]
-                 [jetty/javax.servlet "5.1.12"]]
+                 [jetty/javax.servlet "5.1.12"]
+                 [irclj "0.5.0-alpha4"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]] ;; 1.0.3
 
   :source-paths ["src/clj"]
 
-  :cljsbuild { 
+  :cljsbuild {
     :builds [{:id "om-sente"
               :source-paths ["src/cljs"]
               :compiler {

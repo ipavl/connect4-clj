@@ -13,7 +13,8 @@
             [compojure.handler :as h]
             [compojure.route :as r]
             [org.httpkit.server :as kit]
-            [taoensso.sente :as s]))
+            [taoensso.sente :as s]
+            [om-sente.gameserver :as gs]))
 
 ;; create the Sente web socket connection stuff when we are loaded:
 
@@ -113,12 +114,14 @@
 (defmethod handle-event :session/auth
   [[_ [host port]] req]
   (when-let [uid (session-uid req)]
-    (let [valid (and (not (str/blank? host))
-                     ;; TODO: Handle this better
-                     (not (= 0 (Integer/parseInt port))))]
-      (when valid
-        (add-token uid (unique-id)))
-      (chsk-send! uid [(if valid :auth/success :auth/fail)]))))
+    ;; TODO: Handle this better
+    (let [port-int (Integer/parseInt port)]
+      (let [valid (and (not (str/blank? host))
+                       (not (= 0 port-int)))]
+        (when valid
+          (add-token uid (unique-id))
+          (gs/connect host port-int "iantest" "#iantest"))
+        (chsk-send! uid [(if valid :auth/success :auth/fail)])))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
 ;; Also record activity to keep session alive.
