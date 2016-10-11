@@ -7,13 +7,13 @@
 (ns om-sente.server
   (:require [clojure.core.async :as async
              :refer [<! <!! chan go thread]]
-            [clojure.core.cache :as cache]
             [clojure.string :as str]
             [compojure.core :refer [defroutes GET POST routes]]
             [compojure.handler :as h]
             [compojure.route :as r]
             [org.httpkit.server :as kit]
             [taoensso.sente :as s]
+            [om-sente.session :as session]
             [om-sente.gameserver :as gs]))
 
 ;; create the Sente web socket connection stuff when we are loaded:
@@ -25,45 +25,6 @@
   (def ring-ajax-get-ws ajax-get-or-ws-handshake-fn)
   (def ch-chsk          ch-recv)
   (def chsk-send!       send-fn))
-
-;; session cache to maintain authentication - so we can rely
-;; entirely on socket communication instead of needing to login
-;; to the application first: 5 minutes of inactive will log you out
-
-(def session-map (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000))))
-
-(defn keep-alive
-  "Given a UID, keep it alive."
-  [uid]
-  (println "keep-alive" uid (java.util.Date.))
-  (when-let [token (get @session-map uid)]
-    (swap! session-map assoc uid token)))
-
-(defn add-token
-  "Given a UID and a token, remember it."
-  [uid token]
-  (println "add-token" uid token (java.util.Date.))
-  (swap! session-map assoc uid token))
-
-(defn add-irc-connection
-  "Given a UID and an IRC connection object, remember it."
-  [uid irc]
-  (println "add-irc-connection" uid irc)
-  (swap! session-map assoc uid irc))
-
-(defn get-token
-  "Given a UID, retrieve the associated token, if any."
-  [uid]
-  (let [token (get @session-map uid)]
-    (println "get-token" uid token (java.util.Date.))
-    token))
-
-(defn get-irc-connection
-  "Given a UID, retrieve the associated IRC connection, if any."
-  [uid]
-  (let [irc (get @session-map uid)]
-    (println "get-irc-connection" uid irc)
-    irc))
 
 (defn root
   "Return the absolute (root-relative) version of the given path."
@@ -113,7 +74,7 @@
   "Tell the server what state this user's session is in."
   [req]
   (when-let [uid (session-uid req)]
-    (chsk-send! uid [:session/state (if (get-token uid) :secure :open)])))
+    (chsk-send! uid [:session/state (if (session/get-token uid) :secure :open)])))
 
 ;; Reply with the session state - either open or secure.
 
@@ -132,10 +93,10 @@
       (let [valid (and (not (str/blank? host))
                        (not (= 0 port-int)))]
         (when valid
-          (add-token uid (unique-id))
+          (session/add-token uid (unique-id))
           (let [irc (gs/connect host port-int (str "c4-clj-" uid))]
-            (add-irc-connection uid irc))
-          (gs/join (get-irc-connection uid) "#iantest")
+            (session/add-irc-connection uid irc))
+          (gs/join (session/get-irc-connection uid) "#iantest")
         (chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
@@ -144,8 +105,8 @@
 (defmethod handle-event :test/echo
   [[_ msg] req]
   (when-let [uid (session-uid req)]
-    (keep-alive uid)
-    (gs/message (get-irc-connection uid) "#iantest" msg)
+    (session/keep-alive uid)
+    (gs/message (session/get-irc-connection uid) "#iantest" msg)
     (chsk-send! uid [:test/reply msg])
     (Thread/sleep 3000)
     (chsk-send! uid [:test/reply (clojure.string/reverse msg)])))
