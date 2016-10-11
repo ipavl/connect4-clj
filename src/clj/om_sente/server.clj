@@ -12,19 +12,9 @@
             [compojure.handler :as h]
             [compojure.route :as r]
             [org.httpkit.server :as kit]
-            [taoensso.sente :as s]
+            [om-sente.websocket :as ws]
             [om-sente.session :as session]
             [om-sente.gameserver :as gs]))
-
-;; create the Sente web socket connection stuff when we are loaded:
-
-(let [{:keys [ch-recv send-fn ajax-post-fn
-              ajax-get-or-ws-handshake-fn] :as sente-info}
-      (s/make-channel-socket! {})]
-  (def ring-ajax-post   ajax-post-fn)
-  (def ring-ajax-get-ws ajax-get-or-ws-handshake-fn)
-  (def ch-chsk          ch-recv)
-  (def chsk-send!       send-fn))
 
 (defn root
   "Return the absolute (root-relative) version of the given path."
@@ -60,8 +50,8 @@
 (defroutes server
   (-> (routes
        (GET  "/"   req (#'index req))
-       (GET  "/ws" req (#'ring-ajax-get-ws req))
-       (POST "/ws" req (#'ring-ajax-post   req))
+       (GET  "/ws" req (#'ws/ring-ajax-get-ws req))
+       (POST "/ws" req (#'ws/ring-ajax-post   req))
        (r/files "/" {:root (root "")})
        (r/not-found "<p>Page not found. I has a sad!</p>"))
       h/site))
@@ -74,7 +64,7 @@
   "Tell the server what state this user's session is in."
   [req]
   (when-let [uid (session-uid req)]
-    (chsk-send! uid [:session/state (if (session/get-token uid) :secure :open)])))
+    (ws/chsk-send! uid [:session/state (if (session/get-token uid) :secure :open)])))
 
 ;; Reply with the session state - either open or secure.
 
@@ -97,7 +87,7 @@
           (let [irc (gs/connect host port-int (str "c4-clj-" uid))]
             (session/add-irc-connection uid irc))
           (gs/join (session/get-irc-connection uid) "#iantest")
-        (chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
+        (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
 ;; Also record activity to keep session alive.
@@ -107,9 +97,9 @@
   (when-let [uid (session-uid req)]
     (session/keep-alive uid)
     (gs/message (session/get-irc-connection uid) "#iantest" msg)
-    (chsk-send! uid [:test/reply msg])
+    (ws/chsk-send! uid [:test/reply msg])
     (Thread/sleep 3000)
-    (chsk-send! uid [:test/reply (clojure.string/reverse msg)])))
+    (ws/chsk-send! uid [:test/reply (clojure.string/reverse msg)])))
 
 ;; When the client pings us, send back the session state:
 
@@ -129,10 +119,10 @@
 (defn event-loop
   "Handle inbound events."
   []
-  (go (loop [{:keys [client-uuid ring-req event] :as data} (<! ch-chsk)]
+  (go (loop [{:keys [client-uuid ring-req event] :as data} (<! ws/ch-chsk)]
         (println "-" event)
         (thread (handle-event event ring-req))
-        (recur (<! ch-chsk)))))
+        (recur (<! ws/ch-chsk)))))
 
 (defn -main
   "Start the http-kit server. Takes no arguments.

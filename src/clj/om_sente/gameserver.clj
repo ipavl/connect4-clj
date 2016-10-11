@@ -3,7 +3,7 @@
 
 (defn callback
   [irc type & s]
-  (prn irc type s))
+  (prn irc))
 
 (defn connect
   "Connects to the given IRC server."
