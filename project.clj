@@ -15,6 +15,8 @@
                  [jetty/javax.servlet "5.1.12"]
                  [irclj "0.5.0-alpha4"]]
 
+  :main "om-sente.server"
+
   :plugins [[lein-cljsbuild "1.0.3"]] ;; 1.0.3
 
   :source-paths ["src/clj"]
