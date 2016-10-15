@@ -12,6 +12,7 @@
             [compojure.handler :as h]
             [compojure.route :as r]
             [org.httpkit.server :as kit]
+            [ring.middleware.reload :as reload]
             [om-sente.websocket :as ws]
             [om-sente.session :as session]
             [om-sente.gameserver :as gs]))
@@ -131,4 +132,4 @@
   (event-loop)
   (let [port (or (System/getenv "PORT") 8444)]
     (println "Starting Sente server on port" port "...")
-    (kit/run-server #'server {:port port})))
+    (kit/run-server (reload/wrap-reload #'server) {:port port})))
