@@ -166,7 +166,7 @@
   [e app owner]
   (let [host (-> (om/get-node owner "host") .-value)
         port (-> (om/get-node owner "port") .-value)]
-    (om/update! app [:notify/error] nil)
+    (om/update! app [:notify/error] "Connecting...")
     (chsk-send! [:session/auth [host port]]))
   ;; suppress the form submit:
   false)
