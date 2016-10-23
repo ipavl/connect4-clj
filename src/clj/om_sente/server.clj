@@ -15,7 +15,9 @@
             [ring.middleware.reload :as reload]
             [om-sente.websocket :as ws]
             [om-sente.session :as session]
-            [om-sente.gameserver :as gs]))
+            [om-sente.gameserver :as gs]
+            [om-sente.views.layout :as layout]
+            [om-sente.views.contents :as contents]))
 
 (defn root
   "Return the absolute (root-relative) version of the given path."
@@ -40,7 +42,7 @@
    :session (if (session-uid req)
               (:session req)
               (assoc (:session req) :uid (unique-id)))
-   :body (slurp "index.html")})
+   :body (layout/page "Connect4-clj Webclient" (contents/index))})
 
 ;; minimal set of routes to handle:
 ;; - home page request
@@ -54,7 +56,7 @@
        (GET  "/ws" req (#'ws/ring-ajax-get-ws req))
        (POST "/ws" req (#'ws/ring-ajax-post   req))
        (r/files "/" {:root (root "")})
-       (r/not-found "<p>Page not found. I has a sad!</p>"))
+       (r/not-found (layout/page "Page not found" (contents/not-found))))
       h/site))
 
 (defmulti handle-event
