@@ -79,17 +79,18 @@
 ;; For a successful authentication, remember the login.
 
 (defmethod handle-event :session/auth
-  [[_ [host port]] req]
+  [[_ [host port room]] req]
   (when-let [uid (session-uid req)]
     ;; TODO: Handle this better
     (let [port-int (Integer/parseInt port)]
       (let [valid (and (not (str/blank? host))
-                       (not (= 0 port-int)))]
+                       (not (= 0 port-int))
+                       (not (str/blank? room)))]
         (when valid
           (session/add-token uid (unique-id))
           (let [irc (gs/connect host port-int (str "c4-clj-" uid))]
             (session/add-irc-connection uid irc))
-          (gs/join (session/get-irc-connection uid) "#iantest")
+          (gs/join (session/get-irc-connection uid) (str "#" room))
         (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
@@ -99,7 +100,8 @@
   [[_ msg] req]
   (when-let [uid (session-uid req)]
     (session/keep-alive uid)
-    (gs/message (session/get-irc-connection uid) "#iantest" msg)
+    (let [irc (session/get-irc-connection uid)]
+      (gs/message irc (first (keys (irc :channels))) msg))
     (ws/chsk-send! uid [:test/reply msg])
     (Thread/sleep 3000)
     (ws/chsk-send! uid [:test/reply (clojure.string/reverse msg)])))

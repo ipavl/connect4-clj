@@ -165,9 +165,10 @@
   "Handle the login event - send credentials to the server."
   [e app owner]
   (let [host (-> (om/get-node owner "host") .-value)
-        port (-> (om/get-node owner "port") .-value)]
+        port (-> (om/get-node owner "port") .-value)
+        room (-> (om/get-node owner "room") .-value)]
     (om/update! app [:notify/error] "Connecting...")
-    (chsk-send! [:session/auth [host port]]))
+    (chsk-send! [:session/auth [host port room]]))
   ;; suppress the form submit:
   false)
 
@@ -177,7 +178,7 @@
   (reify
     om/IInitState
     (init-state [this]
-                {:host "localhost" :port "6667"})
+                {:host "localhost" :port "6667" :room ""})
     om/IRenderState
     (render-state [this state]
                   (html [:div {:style {:margin "auto" :width "175"
@@ -194,6 +195,10 @@
                            [:p "Port"]
                            [:input {:ref "port" :type "number" :value (:port state)
                                     :on-change #(field-change % owner :port)}]]
+                          [:div
+                           [:p "Room"]
+                           [:input {:ref "room" :type "text" :value (:room state)
+                                    :on-change #(field-change % owner :room)}]]
                           [:div
                            [:input {:type "submit" :value "Connect"}]]]]))))
 
