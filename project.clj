@@ -22,6 +22,7 @@
   :plugins [[lein-cljsbuild "1.0.3"]] ;; 1.0.3
 
   :source-paths ["src/clj"]
+  :test-paths ["test/clj"] 
 
   :cljsbuild {
     :builds [{:id "om-sente"
