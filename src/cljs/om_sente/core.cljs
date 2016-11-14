@@ -178,7 +178,7 @@
   (reify
     om/IInitState
     (init-state [this]
-                {:host "localhost" :port "6667" :room ""})
+                {:host "localhost" :port "6667" :room "iantest"})
     om/IRenderState
     (render-state [this state]
                   (html [:div {:style {:margin "auto" :width "175"
