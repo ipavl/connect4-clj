@@ -12,3 +12,14 @@
       (if (and (not-any? str/blank? parsed)
                (some (partial = (first parsed)) p/commands))
         parsed))))
+
+(defmulti handle-command
+  (fn [command] (command :command)))
+
+(defmethod handle-command :handshake
+  [arg]
+  (println arg))
+
+(defmethod handle-command :default
+  [params]
+  (println "No handler for" (params :command)))
