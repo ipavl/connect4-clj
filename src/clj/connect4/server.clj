@@ -4,7 +4,7 @@
 ;;
 ;; no claim is made of best practices - feedback welcome
 
-(ns om-sente.server
+(ns connect4.server
   (:require [clojure.core.async :as async
              :refer [<! <!! chan go thread]]
             [clojure.string :as str]
@@ -13,11 +13,11 @@
             [compojure.route :as r]
             [org.httpkit.server :as kit]
             [ring.middleware.reload :as reload]
-            [om-sente.websocket :as ws]
-            [om-sente.session :as session]
-            [om-sente.gameserver :as gs]
-            [om-sente.views.layout :as layout]
-            [om-sente.views.contents :as contents]))
+            [connect4.websocket :as ws]
+            [connect4.session :as session]
+            [connect4.gameserver :as gs]
+            [connect4.views.layout :as layout]
+            [connect4.views.contents :as contents]))
 
 (defn root
   "Return the absolute (root-relative) version of the given path."
@@ -135,5 +135,5 @@
   [& args]
   (event-loop)
   (let [port (or (System/getenv "PORT") 8444)]
-    (println "Starting Sente server on port" port "...")
+    (println "Starting Connect4 server on port" port "...")
     (kit/run-server (reload/wrap-reload #'server) {:port port})))

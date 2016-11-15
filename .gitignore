@@ -1,5 +1,5 @@
 pom.xml
-om_sente.js
+connect4.js
 *jar
 /lib/
 /classes/
@@ -8,6 +8,7 @@ om_sente.js
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/
+.lein-failures
 /.nrepl-port
 
 *.swp

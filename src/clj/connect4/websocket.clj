@@ -1,4 +1,4 @@
-(ns om-sente.websocket
+(ns connect4.websocket
   (:require [taoensso.sente :as s]))
 
 ;; create the Sente web socket connection stuff when we are loaded:

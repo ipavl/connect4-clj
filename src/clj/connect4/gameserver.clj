@@ -1,9 +1,9 @@
-(ns om-sente.gameserver
+(ns connect4.gameserver
   (:require [irclj.core :as i]
             [irclj.parser :as p]
             [clojure.string :as str]
-            [om-sente.command-handler :as ch]
-            [om-sente.websocket :as ws]))
+            [connect4.command-handler :as ch]
+            [connect4.websocket :as ws]))
 
 (defn join
   "Joins the specified IRC channel."

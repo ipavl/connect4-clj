@@ -8,12 +8,12 @@ I don't claim any best practices for either and would welcome feedback!
 
 Git clone it locally, then run the following commands:
 
-    lein cljsbuild once om-sente
-    lein run -m om-sente.server
+    lein cljsbuild once connect4
+    lein run -m connect4.server
 
 By default it starts [http-kit](http://http-kit.org/) on port 8444 but you can override that with an environment variable:
 
-    PORT=8123 lein run -m om-sente.server
+    PORT=8123 lein run -m connect4.server
 
 The app will load, challenge you to login (it's admin / secret), and then offer you a test input field that will send the string value to the server every time you press enter. The server will send it back, and three seconds later send it back again, this time reversed. On the client, the string will be converted to ASCII and those codes used to display an animated bar graph and two line graphs.
 
@@ -25,4 +25,4 @@ If you are logged in and reload your browser, your session is maintained.
 
 # License
 
-Copyright &copy; 2014 Sean Corfield. Distributed under the [Eclipse Public License](https://raw2.github.com/seancorfield/om-sente/master/LICENSE), the same as Clojure.
+Copyright &copy; 2014 Sean Corfield. Distributed under the [Eclipse Public License](https://raw2.github.com/seancorfield/connect4/master/LICENSE), the same as Clojure.

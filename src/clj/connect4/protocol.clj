@@ -1,4 +1,4 @@
-(ns om-sente.protocol)
+(ns connect4.protocol)
 
 (def version "V1")
 

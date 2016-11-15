@@ -1,4 +1,4 @@
-(ns om-sente.views.contents)
+(ns connect4.views.contents)
 
 (defn index []
   [:div#app {:style "width: 100%"}])

@@ -2,7 +2,7 @@
 ;; entirely on socket communication instead of needing to login
 ;; to the application first: 5 minutes of inactive will log you out
 
-(ns om-sente.session
+(ns connect4.session
   (:require [clojure.core.cache :as cache]))
 
 (def session-map (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000))))

@@ -4,7 +4,7 @@
 ;;
 ;; no claim is made of best practices - feedback welcome
 
-(ns om-sente.core
+(ns connect4.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]

@@ -1,6 +1,6 @@
-(ns om-sente.command-handler
+(ns connect4.command-handler
   (require [clojure.string :as str]
-           [om-sente.protocol :as p]))
+           [connect4.protocol :as p]))
 
 (defn parse-command
   "Given the text from an IRC message, returns the split command

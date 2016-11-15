@@ -1,4 +1,4 @@
-(defproject om-sente "0.1.0-SNAPSHOT"
+(defproject connect4 "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
 
@@ -17,7 +17,7 @@
                  [jetty/javax.servlet "5.1.12"]
                  [irclj "0.5.0-alpha4"]]
 
-  :main "om-sente.server"
+  :main "connect4.server"
 
   :plugins [[lein-cljsbuild "1.0.3"]] ;; 1.0.3
 
@@ -25,10 +25,10 @@
   :test-paths ["test/clj"] 
 
   :cljsbuild {
-    :builds [{:id "om-sente"
+    :builds [{:id "connect4"
               :source-paths ["src/cljs"]
               :compiler {
-                :output-to "om_sente.js"
+                :output-to "connect4.js"
                 :output-dir "out"
                 :optimizations :none
                 :source-map true}}]})

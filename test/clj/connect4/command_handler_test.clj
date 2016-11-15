@@ -1,6 +1,6 @@
-(ns om-sente.command-handler-test
+(ns connect4.command-handler-test
   (:require [clojure.test :refer :all]
-            [om-sente.command-handler :refer :all]))
+            [connect4.command-handler :refer :all]))
 
 (deftest test-parse-command
   (testing "valid command"
