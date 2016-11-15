@@ -17,8 +17,10 @@
   (fn [command] (command :command)))
 
 (defmethod handle-command :handshake
-  [arg]
-  (println arg))
+  [params]
+  (if (= (params :params) p/version)
+    "Handshake OK"
+    "Handshake not OK"))
 
 (defmethod handle-command :default
   [params]
