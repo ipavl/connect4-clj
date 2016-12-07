@@ -102,9 +102,9 @@
     (session/keep-alive uid)
     (let [irc (session/get-irc-connection uid)]
       (gs/message irc (first (keys (irc :channels))) msg))
-    (ws/chsk-send! uid [:test/reply msg])
+    (ws/chsk-send! uid [:game/board msg])
     (Thread/sleep 3000)
-    (ws/chsk-send! uid [:test/reply (clojure.string/reverse msg)])))
+    (ws/chsk-send! uid [:game/board (clojure.string/reverse msg)])))
 
 ;; When the client pings us, send back the session state:
 
