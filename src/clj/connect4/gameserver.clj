@@ -23,6 +23,7 @@
   (let [uid (last (str/split (irc :nick) #"-"))]
     (when-let [command (ch/parse-command (type :text))]
       (let [reply (ch/handle-command {:id 1,
+                                      :uid uid
                                       :command (keyword (str/lower-case (first command))),
                                       :params (last command)})]
         (message irc (first (keys (irc :channels))) reply)))

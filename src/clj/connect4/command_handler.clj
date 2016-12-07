@@ -1,5 +1,7 @@
 (ns connect4.command-handler
   (require [clojure.string :as str]
+           [connect4.session :as session]
+           [connect4.command-handler-helpers :as chh]
            [connect4.protocol :as p]))
 
 (defn parse-command
@@ -19,8 +21,15 @@
 (defmethod handle-command :handshake
   [params]
   (if (= (params :params) p/version)
-    "Handshake OK"
+    (do
+      (session/add-game-board (params :uid) (chh/create-game-board))
+      "Handshake OK")
     "Handshake not OK"))
+
+(defmethod handle-command :debug
+  [params]
+  (if (= (params :params) "BOARD")
+    (session/get-game-board (params :uid))))
 
 (defmethod handle-command :default
   [params]

@@ -2,4 +2,9 @@
 
 (def version "V1")
 
-(def commands ["HANDSHAKE"])
+(def board-width 7)
+
+(def board-height 6)
+
+(def commands ["DEBUG",
+               "HANDSHAKE"])

@@ -26,6 +26,12 @@
   (println "add-irc-connection" uid irc)
   (swap! session-map assoc uid irc))
 
+(defn add-game-board
+  "Given a UID and a game board object, remember it."
+  [uid board]
+  (println "add-game-board" uid board)
+  (swap! session-map assoc uid board))
+
 (defn get-token
   "Given a UID, retrieve the associated token, if any."
   [uid]
@@ -40,3 +46,9 @@
     (println "get-irc-connection" uid irc)
     irc))
 
+(defn get-game-board
+  "Given a UID, retrieve the associated game board, if any."
+  [uid]
+  (let [board (get @session-map uid)]
+    (println "get-game-board" uid board)
+    board))
