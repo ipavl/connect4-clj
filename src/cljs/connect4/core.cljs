@@ -111,6 +111,19 @@
                                       t
                                       (range)))])))))
 
+(defn game-board
+  [app owner]
+  (reify
+    om/IInitState
+    (init-state [this]
+                {:board "localhost"})
+    om/IRenderState
+    (render-state [this state]
+      (let [s (:board/text app)
+            t (make-target s)]
+        (html [:div {:style {}}
+              [:p (str "Game board: '" (clj->js s) "'")]])))))
+
 (defmulti handle-event
   "Handle events based on the event ID."
   (fn [[ev-id ev-arg] app owner] ev-id))
@@ -120,6 +133,10 @@
 (defmethod handle-event :test/reply
   [[_ msg] app owner]
   (om/update! app :data/text msg))
+
+(defmethod handle-event :game/board
+  [[_ msg] app owner]
+  (om/update! app :board/text msg))
 
 ;; Ignore unknown events (we just print to the console):
 
@@ -337,6 +354,7 @@
                                  :border "solid blue 1px" :padding 20}}
                    [:h1 "Test Sente"]
                    (om/build text-sender app {})
+                   (om/build game-board app {})
                    (om/build animated-bar-graph app {})
                    (om/build d3-test app {})
                    (om/build nvd3-test app {})
