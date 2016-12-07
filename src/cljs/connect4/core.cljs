@@ -67,10 +67,18 @@
                 {:board "localhost"})
     om/IRenderState
     (render-state [this state]
-      (let [s (:board/text app)
-            t (make-target s)]
-        (html [:div {:style {}}
-              [:p (str "Game board: '" (clj->js s) "'")]])))))
+      (let [board (:board/text app)
+            t (make-target board)]
+        (html [:table {:style {}}
+          (for [row board]
+            [:tr {:key (rand-int 10000)
+                  :style {:border "solid black 1px"}}
+              (for [cell row]
+                [:td {:key (rand-int 10000)
+                      :style {:border "solid black 1px"
+                              :width 200
+                              :height 100}}
+                     cell])])])))))
 
 (defmulti handle-event
   "Handle events based on the event ID."
@@ -139,7 +147,7 @@
   (reify
     om/IInitState
     (init-state [this]
-                {:host "localhost" :port "6667" :room "iantest"})
+                {:host "irc.freenode.net" :port "6667" :room "#cljtest"})
     om/IRenderState
     (render-state [this state]
                   (html [:div {:style {:margin "auto" :width "175"
