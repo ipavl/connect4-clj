@@ -7,4 +7,5 @@
 (def board-height 6)
 
 (def commands ["DEBUG",
+               "PLAY",
                "HANDSHAKE"])

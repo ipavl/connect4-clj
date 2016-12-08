@@ -26,6 +26,17 @@
       "Handshake OK")
     "Handshake not OK"))
 
+(defmethod handle-command :play
+  [params]
+  (let [col (Integer/parseInt (params :params))]
+    (if (<= 0 col p/board-width)
+      (session/add-game-board
+        (params :uid)
+        (chh/create-updated-board
+          (session/get-game-board (params :uid))
+          col))
+      (session/get-game-board (params :uid)))))
+
 (defmethod handle-command :debug
   [params]
   (if (= (params :params) "BOARD")
