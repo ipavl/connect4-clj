@@ -23,7 +23,7 @@
   (if (= (params :params) p/version)
     (do
       (session/add-game-board (params :uid) (chh/create-game-board))
-      "Handshake OK")
+      (session/get-game-board (params :uid)))
     "Handshake not OK"))
 
 (defmethod handle-command :play
