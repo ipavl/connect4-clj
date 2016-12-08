@@ -8,7 +8,7 @@
 
     [:body
       content
-      (include-js "http://fb.me/react-0.11.2.js")
+      (include-js "https://cdnjs.cloudflare.com/ajax/libs/react/0.11.2/react.min.js")
       (include-js "out/goog/base.js")
       (include-js "connect4.js")
       [:script
