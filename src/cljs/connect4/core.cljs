@@ -71,11 +71,9 @@
             t (make-target board)]
         (html [:table {:style {}}
           (for [row board]
-            [:tr {:key (rand-int 10000)
-                  :style {:border "solid black 1px"}}
+            [:tr {:style {}}
               (for [cell row]
-                [:td {:key (rand-int 10000)
-                      :style {:border "solid black 1px"
+                [:td {:style {:border "solid black 1px"
                               :width 200
                               :height 100}}
                      cell])])])))))
