@@ -35,6 +35,12 @@
   [req]
   (get-in req [:session :uid]))
 
+(defn send-irc-message
+  "Helper to send messages to IRC as the specified client."
+  [uid msg]
+  (let [irc (session/get-irc-connection uid)]
+    (gs/message irc (first (keys (irc :channels))) msg)))
+
 (defn index
   "Handle index page request. Injects session uid if needed."
   [req]
@@ -100,8 +106,7 @@
   [[_ msg] req]
   (when-let [uid (session-uid req)]
     (session/keep-alive uid)
-    (let [irc (session/get-irc-connection uid)]
-      (gs/message irc (first (keys (irc :channels))) msg))
+    (send-irc-message uid msg)
     (ws/chsk-send! uid [:game/board msg])
     (Thread/sleep 3000)
     (ws/chsk-send! uid [:game/board (clojure.string/reverse msg)])))
