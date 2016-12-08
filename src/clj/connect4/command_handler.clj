@@ -34,8 +34,8 @@
         (params :uid)
         (chh/create-updated-board
           (session/get-game-board (params :uid))
-          col))
-      (session/get-game-board (params :uid)))))
+          col)))
+    (session/get-game-board (params :uid))))
 
 (defmethod handle-command :debug
   [params]
