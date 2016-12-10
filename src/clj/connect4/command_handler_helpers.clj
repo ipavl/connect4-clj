@@ -18,9 +18,10 @@
         (recur (dec x))))))
 
 (defn create-updated-board
-  "Given a board and a column to add to, creates a new board. If the given
-   column is at its maximum height, returns the old board."
-  [board col]
+  "Given a board, a column to add to, and the colour of the piece to add,
+   creates a new board. If the given column is at its maximum height,
+   returns the old board."
+  [board col colour]
   (if-let [row (get-next-available-row board col)]
-    (assoc-in board [row col] "X")
+    (assoc-in board [row col] colour)
     board))

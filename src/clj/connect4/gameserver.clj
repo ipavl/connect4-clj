@@ -22,10 +22,11 @@
   ;; Hacky way to get the user's uid back from their nick
   (let [uid (last (str/split (irc :nick) #"-"))]
     (when-let [command (ch/parse-command (type :text))]
-      (let [reply (ch/handle-command {:id 1,
+      (let [reply (ch/handle-command {:id 1
                                       :uid uid
-                                      :command (keyword (str/lower-case (first command))),
-                                      :params (last command)})]
+                                      :command (keyword (str/lower-case (first command)))
+                                      :params (last command)
+                                      :source :irc})]
         (message irc (first (keys (irc :channels))) reply)
         (ws/chsk-send! (Integer/parseInt uid) [:game/board reply])))))
 

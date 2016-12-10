@@ -59,6 +59,25 @@
   [s]
   (take text-length (concat (map #(.charCodeAt %) s) (repeat 0))))
 
+(defn game-board-controls
+  [app owner]
+  (reify
+    om/IInitState
+    (init-state [this])
+    om/IRenderState
+    (render-state [this state]
+      (html [:table [:tr
+        (for [col (range 0 7)]
+          [:td {:style {:text-align "center"
+                        :text-transform "uppercase"
+                        :width 200
+                        :height 50}}
+            [:input {:type "button"
+                     :value "DROP"
+                     :on-click #(chsk-send! [:game/board-action (str "PLAY:" col)])
+                     :style {:width "100%"
+                             :height 50}}]])]]))))
+
 (defn game-board
   [app owner]
   (reify
@@ -177,8 +196,8 @@
     (render [this]
             (html [:div {:style {:margin "auto" :width "1000"
                                  :border "solid blue 1px" :padding 20}}
-                   [:h1 "Connect 4"]
                    (om/build text-sender app {})
+                   (om/build game-board-controls app {})
                    (om/build game-board app {})
                    [:div {:style {:clear "both"}}]]))))
 

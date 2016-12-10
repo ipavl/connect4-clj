@@ -13,6 +13,7 @@
             [compojure.route :as r]
             [org.httpkit.server :as kit]
             [ring.middleware.reload :as reload]
+            [connect4.command-handler :as ch]
             [connect4.websocket :as ws]
             [connect4.session :as session]
             [connect4.gameserver :as gs]
@@ -99,17 +100,26 @@
           (gs/join (session/get-irc-connection uid) (str "#" room))
         (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
-;; Reply with the same message, followed by the reverse of the message a few seconds later.
-;; Also record activity to keep session alive.
-
 (defmethod handle-event :test/echo
   [[_ msg] req]
+  "Send the message to IRC."
   (when-let [uid (session-uid req)]
     (session/keep-alive uid)
-    (send-irc-message uid msg)
-    (ws/chsk-send! uid [:game/board msg])
-    (Thread/sleep 3000)
-    (ws/chsk-send! uid [:game/board (clojure.string/reverse msg)])))
+    (send-irc-message uid msg)))
+
+(defmethod handle-event :game/board-action
+  [[_ msg] req]
+  "Handle commands sent by the client's board."
+  (when-let [uid (session-uid req)]
+    (session/keep-alive uid)
+    (when-let [command (ch/parse-command msg)]
+      (let [new-board (ch/handle-command {:id 1
+                                          :uid uid
+                                          :command (keyword (str/lower-case (first command)))
+                                          :params (last command)
+                                          :source :client})]
+        (send-irc-message uid msg)
+        (ws/chsk-send! uid [:game/board new-board])))))
 
 ;; When the client pings us, send back the session state:
 

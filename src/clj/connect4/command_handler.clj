@@ -22,25 +22,28 @@
   [params]
   (if (= (params :params) p/version)
     (do
-      (session/add-game-board (params :uid) (chh/create-game-board))
-      (session/get-game-board (params :uid)))
+      (session/store-board (chh/create-game-board))
+      @session/game-board)
     "Handshake not OK"))
 
 (defmethod handle-command :play
   [params]
   (let [col (Integer/parseInt (params :params))]
     (if (<= 0 col p/board-width)
-      (session/add-game-board
-        (params :uid)
+      (session/store-board
         (chh/create-updated-board
-          (session/get-game-board (params :uid))
-          col)))
-    (session/get-game-board (params :uid))))
+          @session/game-board
+          col
+          (params :source))))
+    @session/game-board))
 
 (defmethod handle-command :debug
   [params]
-  (if (= (params :params) "BOARD")
-    (session/get-game-board (params :uid))))
+  (let [command (params :params)]
+    (cond
+      (= command "BOARD") (println @session/game-board)
+      (= command "SMAP") (println session/session-map))
+    @session/game-board))
 
 (defmethod handle-command :default
   [params]
