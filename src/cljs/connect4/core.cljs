@@ -1,8 +1,6 @@
-;; copyright (c) 2014 Sean Corfield
-;;
-;; small demo to show Om / Sente playing together
-;;
-;; no claim is made of best practices - feedback welcome
+;; Portions of the code in this file is either from or based on
+;; https://github.com/seancorfield/om-sente, which is licensed
+;; under the EPL-1.0 and copyright (c) 2014 Sean Corfield.
 
 (ns connect4.core
   (:require-macros [cljs.core.async.macros :refer [go]])

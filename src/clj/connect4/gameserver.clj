@@ -28,7 +28,7 @@
                                       :params (last command)
                                       :source :irc})]
         (message irc (first (keys (irc :channels))) reply)
-        (ws/chsk-send! (Integer/parseInt uid) [:game/board reply])))))
+        (ws/chsk-send! uid [:game/board reply])))))
 
 (defn connect
   "Connects to the given IRC server."

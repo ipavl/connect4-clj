@@ -5,7 +5,6 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2356"] ;; 2199
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [org.clojure/core.cache "0.6.4"]
                  [om "0.7.3"]
                  [sablono "0.2.22"]
                  [com.taoensso/sente "1.2.0"]

@@ -1,3 +1,7 @@
+;; Portions of the code in this file is either from or based on
+;; https://github.com/seancorfield/om-sente, which is licensed
+;; under the EPL-1.0 and copyright (c) 2014 Sean Corfield.
+
 (ns connect4.session)
 
 (def session-map (atom {}))

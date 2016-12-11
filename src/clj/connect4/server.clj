@@ -1,8 +1,6 @@
-;; copyright (c) 2014 Sean Corfield
-;;
-;; small demo to show Om / Sente playing together
-;;
-;; no claim is made of best practices - feedback welcome
+;; Portions of the code in this file is either from or based on
+;; https://github.com/seancorfield/om-sente, which is licensed
+;; under the EPL-1.0 and copyright (c) 2014 Sean Corfield.
 
 (ns connect4.server
   (:require [clojure.core.async :as async
@@ -26,13 +24,13 @@
   (str (System/getProperty "user.dir") path))
 
 (defn unique-id
-  "Return a really unique ID (for an unsecured session ID).
-  No, a random number is not unique enough. Use a UUID for real!"
+  "Use the first part of a UUID as a unique id, which will also be
+   used in the client's IRC nickname. This should rarely clash."
   []
-  (rand-int 10000))
+  (first (str/split (str (java.util.UUID/randomUUID)) #"-")))
 
 (defn session-uid
-  "Convenient to extract the UID that Sente needs from the request."
+  "Extract UID from request."
   [req]
   (get-in req [:session :uid]))
 
@@ -51,12 +49,6 @@
               (assoc (:session req) :uid (unique-id)))
    :body (layout/page "Connect4-clj Webclient" (contents/index))})
 
-;; minimal set of routes to handle:
-;; - home page request
-;; - web socket GET/POST
-;; - general files (mainly JS)
-;; - 404
-
 (defroutes server
   (-> (routes
        (GET  "/"   req (#'index req))
@@ -71,22 +63,19 @@
   (fn [[ev-id ev-arg] ring-req] ev-id))
 
 (defn session-status
-  "Tell the server what state this user's session is in."
+  "Determine which state the session is currently in."
   [req]
   (when-let [uid (session-uid req)]
     (ws/chsk-send! uid [:session/state (if (session/get-token uid) :secure :open)])))
 
-;; Reply with the session state - either open or secure.
-
 (defmethod handle-event :session/status
   [_ req]
+  "Respond with the current session state."
   (session-status req))
-
-;; Reply with authentication failure or success.
-;; For a successful authentication, remember the login.
 
 (defmethod handle-event :session/auth
   [[_ [host port room]] req]
+  "Connect to the specified IRC server."
   (when-let [uid (session-uid req)]
     ;; TODO: Handle this better
     (let [port-int (Integer/parseInt port)]
@@ -95,10 +84,10 @@
                        (not (str/blank? room)))]
         (when valid
           (session/add-token uid (unique-id))
-          (let [irc (gs/connect host port-int (str "c4-clj-" uid))]
+          (let [irc (gs/connect host port-int (str "c4-clj--" uid))]
             (session/add-irc-connection uid irc))
           (gs/join (session/get-irc-connection uid) (str "#" room))
-        (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
+          (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
 (defmethod handle-event :test/echo
   [[_ msg] req]
@@ -121,19 +110,15 @@
         (send-irc-message uid msg)
         (ws/chsk-send! uid [:game/board new-board])))))
 
-;; When the client pings us, send back the session state:
-
 (defmethod handle-event :chsk/ws-ping
   [_ req]
+  "When the client pings us, send back the session state."
   (session-status req))
-
-;; Handle unknown events.
-;; Note: this includes the Sente implementation events like:
-;; - :chsk/uidport-open
-;; - :chsk/uidport-close
 
 (defmethod handle-event :default
   [event req]
+  "Handle unknown events. Includes Sente events like :chsk/uidport-open
+   and :chsk/uidport-close."
   nil)
 
 (defn event-loop

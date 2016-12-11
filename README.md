@@ -1,28 +1,18 @@
-# Om / Sente / SVG Example
+# connect4-clj
 
-This is intended as a simple proof of concept showing [Om](https://github.com/swannodette/om) and [Sente](https://github.com/ptaoussanis/sente) playing nice together with some SVG-based graphs (raw SVG - animation via Om; raw D3 line graph - painful!; NVD3 line graph - easy).
+An IRC-based Connect 4 client written in Clojure/ClojureScript using Om and Sente.
 
-I don't claim any best practices for either and would welcome feedback!
+# Usage
 
-# Running this example
+    lein cljsbuild [once|auto]
+    lein run
 
-Git clone it locally, then run the following commands:
-
-    lein cljsbuild once connect4
-    lein run -m connect4.server
-
-By default it starts [http-kit](http://http-kit.org/) on port 8444 but you can override that with an environment variable:
-
-    PORT=8123 lein run -m connect4.server
-
-The app will load, challenge you to login (it's admin / secret), and then offer you a test input field that will send the string value to the server every time you press enter. The server will send it back, and three seconds later send it back again, this time reversed. On the client, the string will be converted to ASCII and those codes used to display an animated bar graph and two line graphs.
-
-Every time you submit a value, it updates your session on the server to keep it alive for five more minutes.
-
-When your session times out, you will automatically be logged out and shown the login form again.
-
-If you are logged in and reload your browser, your session is maintained.
+The default port is 8444. To change the port the server runs on, use `PORT=#### lein run` instead.
 
 # License
 
-Copyright &copy; 2014 Sean Corfield. Distributed under the [Eclipse Public License](https://raw2.github.com/seancorfield/connect4/master/LICENSE), the same as Clojure.
+Distributed under the Eclipse Public License, the same as Clojure.
+
+# Acknowledgements
+
+Portions of the code in this project for communication and the user interface is either from or based on https://github.com/seancorfield/om-sente, which is licensed under the EPL-1.0 and copyright (c) 2014 Sean Corfield.
