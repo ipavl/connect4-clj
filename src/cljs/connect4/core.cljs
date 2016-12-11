@@ -57,6 +57,23 @@
   [s]
   (take text-length (concat (map #(.charCodeAt %) s) (repeat 0))))
 
+(defn challenge-controls
+  [app owner]
+  (reify
+    om/IInitState
+    (init-state [this])
+    om/IRenderState
+    (render-state [this state]
+      (html [:div
+              [:input {:type "text" :value (:text state) :placeholder "challenge-id"
+                        :on-change #(field-change % owner :text)}]
+              [:input {:type "button"
+                        :value "open"
+                        :on-click #(chsk-send! [:command/send-without-cid (str "OPEN_CHALLENGE:" (:text state))])}]
+              [:input {:type "button"
+                        :value "accept"
+                        :on-click #(chsk-send! [:command/send-without-cid (str "ACCEPT_CHALLENGE:" (:text state))])}]]))))
+
 (defn game-board-controls
   [app owner]
   (reify
@@ -72,7 +89,7 @@
                         :height 50}}
             [:input {:type "button"
                      :value "DROP"
-                     :on-click #(chsk-send! [:game/board-action (str "PLAY:" col)])
+                     :on-click #(chsk-send! [:command/send-with-cid (str "PLAY:" col)])
                      :style {:width "100%"
                              :height 50}}]])]]))))
 
@@ -196,7 +213,8 @@
     (render [this]
             (html [:div {:style {:margin "auto" :width "1000"
                                  :border "solid blue 1px" :padding 20}}
-                   (om/build text-sender app {})
+                   (om/build challenge-controls app {})
+                   ;(om/build text-sender app {})
                    (om/build game-board-controls app {})
                    (om/build game-board app {})
                    [:div {:style {:clear "both"}}]]))))

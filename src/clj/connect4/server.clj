@@ -96,9 +96,23 @@
     (session/keep-alive uid)
     (send-irc-message uid msg)))
 
-(defmethod handle-event :game/board-action
+(defmethod handle-event :command/send-with-cid
   [[_ msg] req]
-  "Handle commands sent by the client's board."
+  "Handle commands sent by the client that should be sent with the challenge-id."
+  (when-let [uid (session-uid req)]
+    (session/keep-alive uid)
+    (when-let [command (ch/parse-command msg)]
+      (let [new-board (ch/handle-command {:id 1
+                                          :uid uid
+                                          :command (keyword (str/lower-case (first command)))
+                                          :params (last command)
+                                          :source :client})]
+        (send-irc-message uid (str msg ":" @session/challenge-id))
+        (ws/chsk-send! uid [:game/board new-board])))))
+
+(defmethod handle-event :command/send-without-cid
+  [[_ msg] req]
+  "Handle commands sent by the client that should be sent without the challenge-id."
   (when-let [uid (session-uid req)]
     (session/keep-alive uid)
     (when-let [command (ch/parse-command msg)]

@@ -18,14 +18,6 @@
 (defmulti handle-command
   (fn [command] (command :command)))
 
-(defmethod handle-command :handshake
-  [params]
-  (if (= (params :params) p/version)
-    (do
-      (session/store-board (chh/create-game-board))
-      @session/game-board)
-    "Handshake not OK"))
-
 (defmethod handle-command :play
   [params]
   (let [col (Integer/parseInt (params :params))]
@@ -37,12 +29,29 @@
           (params :source))))
     @session/game-board))
 
+(defmethod handle-command :open_challenge
+  [params]
+  "Stores the challenge-id if the command was from the client.
+   Ignores the command if it came from IRC."
+  (if (= (params :source) :client)
+    (let [challenge-id (params :params)]
+      (session/store-challenge-id challenge-id)))
+  @session/game-board)
+
+(defmethod handle-command :accept_challenge
+  [params]
+  (let [challenge-id (params :params)]
+    (session/store-challenge-id challenge-id))
+  (session/store-board (chh/create-game-board))
+  @session/game-board)
+
 (defmethod handle-command :debug
   [params]
   (let [command (params :params)]
     (cond
       (= command "BOARD") (println @session/game-board)
-      (= command "SMAP") (println session/session-map))
+      (= command "SMAP") (println session/session-map)
+      (= command "CID") (println @session/challenge-id))
     @session/game-board))
 
 (defmethod handle-command :default

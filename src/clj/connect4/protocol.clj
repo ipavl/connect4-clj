@@ -6,6 +6,7 @@
 
 (def board-height 6)
 
-(def commands ["DEBUG",
-               "PLAY",
-               "HANDSHAKE"])
+(def commands ["DEBUG"
+               "PLAY"
+               "OPEN_CHALLENGE"
+               "ACCEPT_CHALLENGE"])
