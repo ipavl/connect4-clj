@@ -25,3 +25,10 @@
   (if-let [row (get-next-available-row board col)]
     (assoc-in board [row col] colour)
     board))
+
+(defn parse-int
+  "Parses the given string as an integer. Returns nil if doing so throws an exception."
+  [val]
+  (try
+    (Integer/parseInt val)
+    (catch Exception e nil)))

@@ -20,14 +20,17 @@
 
 (defmethod handle-command :play
   [params]
-  (let [col (Integer/parseInt (params :params))]
-    (if (<= 0 col p/board-width)
-      (session/store-board
-        (chh/create-updated-board
-          @session/game-board
-          col
-          (params :source))))
-    @session/game-board))
+  (let [split (str/split (params :params) #":" 2)
+        challenge-id (first split)
+        col (chh/parse-int (last split))]
+    (if-not (nil? col)
+      (if (<= 0 col p/board-width)
+        (session/store-board
+          (chh/create-updated-board
+            @session/game-board
+            col
+            (params :source))))))
+  @session/game-board)
 
 (defmethod handle-command :open_challenge
   [params]

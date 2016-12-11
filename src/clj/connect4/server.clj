@@ -12,6 +12,7 @@
             [org.httpkit.server :as kit]
             [ring.middleware.reload :as reload]
             [connect4.command-handler :as ch]
+            [connect4.command-handler-helpers :as chh]
             [connect4.websocket :as ws]
             [connect4.session :as session]
             [connect4.gameserver :as gs]
@@ -107,7 +108,7 @@
                                           :command (keyword (str/lower-case (first command)))
                                           :params (last command)
                                           :source :client})]
-        (send-irc-message uid (str msg ":" @session/challenge-id))
+        (send-irc-message uid (str (first command) ":" @session/challenge-id ":" (last command)))
         (ws/chsk-send! uid [:game/board new-board])))))
 
 (defmethod handle-event :command/send-without-cid
@@ -148,8 +149,6 @@
   Environment variable PORT can override default port of 8444."
   [& args]
   (event-loop)
-  (let [port (if-not (nil? (System/getenv "PORT"))
-               (Integer/parseInt (System/getenv "PORT"))
-               8444)]
+  (let [port (or (chh/parse-int (System/getenv "PORT")) 8444)]
     (println "Starting Connect4 server on port" port "...")
     (kit/run-server (reload/wrap-reload #'server) {:port port})))
