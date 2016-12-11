@@ -27,7 +27,6 @@
                                       :command (keyword (str/lower-case (first command)))
                                       :params (last command)
                                       :source :irc})]
-        (message irc (first (keys (irc :channels))) reply)
         (ws/chsk-send! uid [:game/board reply])))))
 
 (defn connect
