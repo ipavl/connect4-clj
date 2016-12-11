@@ -46,7 +46,7 @@
         (session/store-in-game false)
         (session/store-board nil)
         (session/store-challenge-id challenge-id))))
-  nil)
+  @session/game-board)
 
 (defmethod handle-command :accept_challenge
   [params]
