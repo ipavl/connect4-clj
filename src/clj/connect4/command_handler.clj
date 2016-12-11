@@ -24,7 +24,9 @@
         challenge-id (first split)
         col (chh/parse-int (last split))]
     (if-not (nil? col)
-      (if (<= 0 col p/board-width)
+      (if (and (or (= (params :source) :client)
+                   (= challenge-id @session/challenge-id))
+               (<= 0 col p/board-width))
         (session/store-board
           (chh/create-updated-board
             @session/game-board
