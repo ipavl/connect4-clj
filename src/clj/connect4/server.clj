@@ -134,6 +134,8 @@
   Environment variable PORT can override default port of 8444."
   [& args]
   (event-loop)
-  (let [port (or (System/getenv "PORT") 8444)]
+  (let [port (if-not (nil? (System/getenv "PORT"))
+               (Integer/parseInt (System/getenv "PORT"))
+               8444)]
     (println "Starting Connect4 server on port" port "...")
     (kit/run-server (reload/wrap-reload #'server) {:port port})))
