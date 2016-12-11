@@ -5,16 +5,22 @@
 (ns connect4.session)
 
 (def session-map  (atom {}))
-(def game-board   (atom []))
-(def challenge-id (atom nil))
+
+(def game-board   (ref []))
+(def challenge-id (ref nil))
+(def in-game      (ref false))
 
 (defn store-board
   [board]
-  (reset! game-board board))
+  (ref-set game-board board))
 
 (defn store-challenge-id
   [cid]
-  (reset! challenge-id cid))
+  (ref-set challenge-id cid))
+
+(defn store-in-game
+  [status]
+  (ref-set in-game status))
 
 (defn keep-alive
   "Given a UID, keep it alive."

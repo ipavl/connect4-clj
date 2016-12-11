@@ -24,14 +24,16 @@
         challenge-id (first split)
         col (chh/parse-int (last split))]
     (if-not (nil? col)
-      (if (and (or (= (params :source) :client)
+      (if (and @session/in-game
+               (or (= (params :source) :client)
                    (= challenge-id @session/challenge-id))
                (<= 0 col p/board-width))
-        (session/store-board
-          (chh/create-updated-board
-            @session/game-board
-            col
-            (params :source))))))
+        (dosync
+          (session/store-board
+            (chh/create-updated-board
+              @session/game-board
+              col
+              (params :source)))))))
   @session/game-board)
 
 (defmethod handle-command :open_challenge
@@ -40,28 +42,42 @@
    Ignores the command if it came from IRC."
   (if (= (params :source) :client)
     (let [challenge-id (params :params)]
-      (session/store-challenge-id challenge-id)))
-  @session/game-board)
+      (dosync
+        (session/store-in-game false)
+        (session/store-board nil)
+        (session/store-challenge-id challenge-id))))
+  nil)
 
 (defmethod handle-command :accept_challenge
   [params]
-  (let [challenge-id (params :params)]
-    (session/store-challenge-id challenge-id))
-  (session/store-board (chh/create-game-board))
+  (if-not @session/in-game
+    (let [challenge-id (params :params)]
+      (if (or (= (params :source) :client)
+              (= challenge-id @session/challenge-id))
+        (dosync
+          (session/store-challenge-id challenge-id)
+          (session/store-board (chh/create-game-board))
+          (session/store-in-game true)))))
   @session/game-board)
 
 (defmethod handle-command :cancel_challenge
   [params]
   "Cancels the currently open challenge."
   (if (= (params :source) :client)
-      (session/store-challenge-id nil))
+    (dosync
+      (session/store-in-game false)
+      (session/store-board nil)
+      (session/store-challenge-id nil)))
   @session/game-board)
 
 (defmethod handle-command :resign
   [params]
   "Resigns from the current game."
-  (session/store-challenge-id nil)
-  nil)
+  (dosync
+    (session/store-in-game false)
+    (session/store-board nil)
+    (session/store-challenge-id nil))
+  @session/game-board)
 
 (defmethod handle-command :debug
   [params]
