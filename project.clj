@@ -6,7 +6,7 @@
                  [org.clojure/clojurescript "0.0-2356"]
                  [org.clojure/core.async "0.2.395"]
                  [om "0.7.3"]
-                 [sablono "0.7.6"]
+                 [sablono "0.2.22"]
                  [com.taoensso/sente "1.2.0"]
                  [hiccup "1.0.5"]
                  [http-kit "2.2.0"]
