@@ -75,7 +75,6 @@
   "Resigns from the current game."
   (dosync
     (session/store-in-game false)
-    (session/store-board nil)
     (session/store-challenge-id nil))
   @session/game-board)
 
