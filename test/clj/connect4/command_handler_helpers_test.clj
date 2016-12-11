@@ -48,12 +48,12 @@
                                     [nil nil nil nil nil nil nil]
                                     [nil nil nil nil nil nil nil]
                                     [nil nil nil nil nil nil nil]
-                                    [nil nil nil nil nil nil nil]] 4) [[nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil "X" nil nil]]))))
+                                    [nil nil nil nil nil nil nil]] 4 "X") [[nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil "X" nil nil]]))))
 
   (testing "add an item to a partially filled column"
     (do
@@ -62,12 +62,12 @@
                                     [nil nil nil nil nil nil nil]
                                     [nil nil nil nil "X" nil nil]
                                     [nil nil nil nil "X" nil nil]
-                                    [nil nil nil nil "X" nil nil]] 4) [[nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil nil nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]]))))
+                                    [nil nil nil nil "X" nil nil]] 4 "X") [[nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil nil nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]]))))
 
   (testing "add an item to a full column"
     (do
@@ -76,9 +76,9 @@
                                     [nil nil nil nil "X" nil nil]
                                     [nil nil nil nil "X" nil nil]
                                     [nil nil nil nil "X" nil nil]
-                                    [nil nil nil nil "X" nil nil]] 4) [[nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]
-                                                                       [nil nil nil nil "X" nil nil]])))))
+                                    [nil nil nil nil "X" nil nil]] 4 "X") [[nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]
+                                                                           [nil nil nil nil "X" nil nil]])))))

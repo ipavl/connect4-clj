@@ -9,6 +9,8 @@ An IRC-based Connect 4 client written in Clojure/ClojureScript using Om and Sent
 
 The default port is 8444. To change the port the server runs on, use `PORT=#### lein run` instead.
 
+Tests can be run using `lein test`.
+
 # License
 
 Distributed under the Eclipse Public License, the same as Clojure.
