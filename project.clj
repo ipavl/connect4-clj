@@ -1,24 +1,24 @@
 (defproject connect4 "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+  :description "An IRC-based Connect 4 client."
+  :url ""
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2356"] ;; 2199
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "0.0-2356"]
+                 [org.clojure/core.async "0.2.395"]
                  [om "0.7.3"]
-                 [sablono "0.2.22"]
+                 [sablono "0.7.6"]
                  [com.taoensso/sente "1.2.0"]
                  [hiccup "1.0.5"]
-                 [http-kit "2.1.19"]
-                 [compojure "1.2.0"]
-                 [ring/ring-core "1.3.1"]
-                 [ring/ring-devel "1.3.1"]
+                 [http-kit "2.2.0"]
+                 [compojure "1.5.1"]
+                 [ring/ring-core "1.5.0"]
+                 [ring/ring-devel "1.5.0"]
                  [jetty/javax.servlet "5.1.12"]
                  [irclj "0.5.0-alpha4"]]
 
   :main "connect4.server"
 
-  :plugins [[lein-cljsbuild "1.0.3"]] ;; 1.0.3
+  :plugins [[lein-cljsbuild "1.0.3"]]
 
   :source-paths ["src/clj"]
   :test-paths ["test/clj"] 
