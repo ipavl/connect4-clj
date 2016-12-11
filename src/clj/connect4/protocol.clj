@@ -9,4 +9,6 @@
 (def commands ["DEBUG"
                "PLAY"
                "OPEN_CHALLENGE"
-               "ACCEPT_CHALLENGE"])
+               "ACCEPT_CHALLENGE"
+               "CANCEL_CHALLENGE"
+               "RESIGN"])

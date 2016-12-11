@@ -50,6 +50,19 @@
   (session/store-board (chh/create-game-board))
   @session/game-board)
 
+(defmethod handle-command :cancel_challenge
+  [params]
+  "Cancels the currently open challenge."
+  (if (= (params :source) :client)
+      (session/store-challenge-id nil))
+  @session/game-board)
+
+(defmethod handle-command :resign
+  [params]
+  "Resigns from the current game."
+  (session/store-challenge-id nil)
+  nil)
+
 (defmethod handle-command :debug
   [params]
   (let [command (params :params)]

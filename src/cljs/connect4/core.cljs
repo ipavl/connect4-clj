@@ -71,8 +71,14 @@
                         :value "open"
                         :on-click #(chsk-send! [:command/send-without-cid (str "OPEN_CHALLENGE:" (:text state))])}]
               [:input {:type "button"
+                        :value "cancel"
+                        :on-click #(chsk-send! [:command/send-without-cid (str "CANCEL_CHALLENGE:" (:text state))])}]
+              [:input {:type "button"
                         :value "accept"
-                        :on-click #(chsk-send! [:command/send-without-cid (str "ACCEPT_CHALLENGE:" (:text state))])}]]))))
+                        :on-click #(chsk-send! [:command/send-without-cid (str "ACCEPT_CHALLENGE:" (:text state))])}]
+              [:input {:type "button"
+                        :value "resign"
+                        :on-click #(chsk-send! [:command/send-without-cid (str "RESIGN:" (:text state))])}]]))))
 
 (defn game-board-controls
   [app owner]
