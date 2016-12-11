@@ -94,8 +94,10 @@
               (for [cell row]
                 [:td {:style {:border "solid black 1px"
                               :width 200
-                              :height 100}}
-                     cell])])])))))
+                              :height 100
+                              :background-color (cond
+                                                  (= cell :client) "#0093BF"
+                                                  (= cell :irc)    "#4CAF50")}}])])])))))
 
 (defmulti handle-event
   "Handle events based on the event ID."
