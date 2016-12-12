@@ -5,12 +5,12 @@
 (deftest test-parse-command
   (testing "valid command"
     (do
-      (is (= ["HANDSHAKE" "V1"] (parse-command "HANDSHAKE:V1")))))
+      (is (= ["ACCEPT_CHALLENGE" "test"] (parse-command "ACCEPT_CHALLENGE:test")))))
 
   (testing "malformed command"
     (do
-      (is (= nil (parse-command ":HANDSHAKE")))
-      (is (= nil (parse-command "HANDSHAKE:")))))
+      (is (= nil (parse-command ":ACCEPT_CHALLENGE")))
+      (is (= nil (parse-command "ACCEPT_CHALLENGE:")))))
 
   (testing "invalid command"
     (do
