@@ -87,7 +87,7 @@
           (session/add-token uid (unique-id))
           (let [irc (gs/connect host port-int (str "c4-clj--" uid))]
             (session/add-irc-connection uid irc))
-          (gs/join (session/get-irc-connection uid) (str "#" room))
+          (gs/join (session/get-irc-connection uid) room)
           (ws/chsk-send! uid [(if valid :auth/success :auth/fail)]))))))
 
 (defmethod handle-event :test/echo
