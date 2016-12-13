@@ -41,7 +41,8 @@
   "Stores the challenge-id if the command was from the client.
    Ignores the command if it came from IRC."
   (if (= (params :source) :client)
-    (let [challenge-id (params :params)]
+    (let [split (str/split (params :params) #":" 2)
+          challenge-id (last split)]
       (dosync
         (session/store-in-game false)
         (session/store-board nil)
