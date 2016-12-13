@@ -2,6 +2,7 @@
   (require [clojure.string :as str]
            [connect4.session :as session]
            [connect4.command-handler-helpers :as chh]
+           [connect4.websocket :as ws]
            [connect4.protocol :as p]))
 
 (defn parse-command
@@ -77,6 +78,9 @@
   (dosync
     (session/store-in-game false)
     (session/store-challenge-id nil))
+  (cond
+    (= (params :source) :client) (ws/chsk-send! (params :uid) [:client/alert "You resigned."])
+    (= (params :source) :irc)    (ws/chsk-send! (params :uid) [:client/alert "Your opponent resigned."]))
   @session/game-board)
 
 (defmethod handle-command :debug

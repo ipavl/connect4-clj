@@ -69,7 +69,7 @@
                         :on-change #(field-change % owner :text)}]
               [:input {:type "button"
                         :value "open"
-                        :on-click #(chsk-send! [:command/send-without-cid (str "OPEN_CHALLENGE:" (:text state))])}]
+                        :on-click #(chsk-send! [:command/send-without-cid (str "OPEN_CHALLENGE:V1:" (:text state))])}]
               [:input {:type "button"
                         :value "cancel"
                         :on-click #(chsk-send! [:command/send-without-cid (str "CANCEL_CHALLENGE:" (:text state))])}]
@@ -154,8 +154,13 @@
   [_ app owner]
   (om/set-state! owner :session/state :secure))
 
+(defmethod handle-event :client/alert
+  [[_ msg] app owner]
+  "Displays the given message in an alert box."
+  (js/alert msg))
+
 (defn test-session
-  "Ping the server to update the sesssion state."
+  "Ping the server to update the session state."
   [owner]
   (chsk-send! [:session/status]))
 
@@ -194,7 +199,7 @@
                                        :border "solid blue 1px" :padding 20}}
                          (when-let [error (:notify/error app)]
                            [:div {:style #js {:color "red"}} error])
-                         [:h1 "Connect"]
+                         [:h1 "Connect 4"]
                          [:form {:on-submit #(attempt-login % app owner)}
                           [:div
                            [:p "Host"]
@@ -205,7 +210,7 @@
                            [:input {:ref "port" :type "number" :value (:port state)
                                     :on-change #(field-change % owner :port)}]]
                           [:div
-                           [:p "Room"]
+                           [:p "Channel"]
                            [:input {:ref "room" :type "text" :value (:room state)
                                     :on-change #(field-change % owner :room)}]]
                           [:div
