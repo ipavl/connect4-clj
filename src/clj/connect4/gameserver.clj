@@ -32,5 +32,4 @@
 (defn connect
   "Connects to the given IRC server."
   [host port nick]
-  (printf "Connecting to %s on port %d...\n" host port)
   (i/connect host port nick :callbacks {:privmsg callback}))
